@@ -2,12 +2,14 @@
 #define ENCRYPTION_H
 
 #include <string>
+#include <iostream>
 #include <gcrypt.h>
 
 using std::string;
+using std::ostream;
 using std::cout;
 
-typedef struct KeyPair {
+struct KeyPair {
   string pub;
   string priv;
 };
