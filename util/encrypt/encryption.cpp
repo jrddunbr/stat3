@@ -28,10 +28,15 @@ int Encryption::write_key(string filename, string key) {
 
 KeyPair Encryption::create_key() {
   gcry_sexp_t prams, keypair;
-  gcry_sexp_build(&prams, NULL, "(genkey (rsa (nbits 4:256)))");
+  gcry_sexp_build(&prams, NULL, "(genkey (rsa (nbits 4:2048)))");
   gcry_pk_genkey(&keypair, prams);
   gcry_sexp_t pubk = gcry_sexp_find_token(keypair, "public-key", 0);
   gcry_sexp_t privk = gcry_sexp_find_token(keypair, "private-key", 0);
+
+  if(!pubk || !privk) {
+	  cout << "Failed to generate key!\n";
+	  exit(1);
+  }
 
   cout << "raw: "<< keypair << "\n";
   //cout << "both: " << to_string(keypair) << "\n";
@@ -39,8 +44,8 @@ KeyPair Encryption::create_key() {
   cout << "pub: " << to_string(pubk) << "\n";
 
   KeyPair key;
-  key.pub = "pub";
-  key.priv = "priv";
+  key.pub = to_string(pubk);
+  key.priv = to_string(privk);
   return key;
 }
 
@@ -73,19 +78,17 @@ size_t Encryption::get_keypair_size(int nbits)
     return (keypair_nbits + rem) / 8;
 }
 
-/*
-
 gcry_sexp_t Encryption::to_gcrypt(string key) {
   size_t error = 0;
   gcry_sexp_t raw;
-  return gcry_sexp_new(raw, key.c_str(), sizeof(key.c_str()), 0);
+  gcry_sexp_new(&raw, key.c_str(), sizeof(key.c_str()), 0);
+  return raw;
 }
 
-*/
-
 string Encryption::to_string(gcry_sexp_t key) {
-  char* charstr = gcry_sexp_nth_string(key, 0);
-  string str = charstr;
-  gcry_free(charstr);
+  size_t sz = gcry_sexp_sprint(key, GCRYSEXP_FMT_CANON, NULL, 0);
+  char *buffer = (char *) malloc(sz);
+  gcry_sexp_sprint(key, GCRYSEXP_FMT_CANON, buffer, sz);
+  string str(buffer);
   return str;
 }
