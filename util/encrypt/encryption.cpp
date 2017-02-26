@@ -30,8 +30,9 @@ KeyPair Encryption::create_key() {
   gcry_sexp_t prams, keypair;
   gcry_sexp_build(&prams, NULL, "(genkey (rsa (nbits 4:2048)))");
   gcry_pk_genkey(&keypair, prams);
-  cout << gcry_sexp_sprint(keypair, GCRYSEXP_FMT_CANON, NULL, 0) << "\n";
   gcry_sexp_t pubk = gcry_sexp_find_token(keypair, "public-key", 0);
+  //use the below line for the key with less surrounding data
+  //gcry_sexp_t pubk = gcry_sexp_find_token(pubk1, "n", 0);
   gcry_sexp_t privk = gcry_sexp_find_token(keypair, "private-key", 0);
 
   if(!pubk || !privk) {
@@ -77,7 +78,8 @@ size_t Encryption::get_keypair_size(int nbits)
 gcry_sexp_t Encryption::to_gcrypt(string key) {
   size_t error = 0;
   gcry_sexp_t raw;
-  gcry_sexp_new(&raw, key.c_str(), sizeof(key.c_str()), 0);
+  gcry_sexp_build(&raw, NULL, key.c_str());
+  //gcry_sexp_new(&raw, key.c_str(), sizeof(key.c_str()), 0);
   return raw;
 }
 
