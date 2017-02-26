@@ -16,4 +16,5 @@ int main() {
   string test2 = encrypt.to_string(test);
   //we want these to be the exact same string. This confirms that the keys are reloaded properly
   cout << "pub-before: " << keypair.pub << " pub-afer: " << test2 << "\n";
+  cout << "compare " << keypair.pub.compare(test2) << "\n";
 }
