@@ -11,9 +11,9 @@ string Encryption::read_key(string filename) {
   string str = "";
   while(in) {
     char input = in.get();
-    if (isalpha(input)) {
+    //if (isalpha(input)) {
       str += input;
-    }
+    //}
   }
   in.close();
   return str;
@@ -46,22 +46,16 @@ KeyPair Encryption::create_key() {
   return key;
 }
 
-string Encryption::encrypt(string pubkey, string data) {
-  /*
-  gcry_sexp_t data;
-  data = to_gcrypt(data);
-  gcry_pk_encrypt(<cipher>, data, to_gcrypt(pubkey));
-  */
-  return "encrypted";
+gcry_sexp_t Encryption::encrypt(string pubkey, string data) {
+  gcry_sexp_t ciphertext;
+  gcry_pk_encrypt(&ciphertext, to_gcrypt(data), to_gcrypt(pubkey));
+  return ciphertext;
 }
 
-string Encryption::decrypt(string privkey, string data) {
-  /*
+string Encryption::decrypt(string privkey, gcry_sexp_t &ciphertext) {
   gcry_sexp_t data;
-  data = to_gcrypt(data);
-  gcry_pk_decrypt(<cipher>, data, to_gcrypt(privkey));
-  */
-  return "decrypted";
+  gcry_pk_decrypt(&ciphertext, data, to_gcrypt(privkey));
+  return to_string(data);
 }
 
 size_t Encryption::get_keypair_size(int nbits)

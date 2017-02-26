@@ -18,7 +18,8 @@ class Encryption {
 private:
   size_t get_keypair_size(int nbits);
   size_t keysize;
-
+  gcry_sexp_t to_gcrypt(string key);
+  string to_string(gcry_sexp_t);
 public:
   Encryption() {
     if(!gcry_check_version (NULL)) {
@@ -29,10 +30,10 @@ public:
   string read_key(string filename);
   int write_key(string filename, string key);
   KeyPair create_key();
-  string encrypt(string pubkey, string data);
-  string decrypt(string privkey, string data);
-  gcry_sexp_t to_gcrypt(string key);
-  string to_string(gcry_sexp_t);
+  //string encrypt(string pubkey, string data);
+  gcry_sexp_t encrypt(string pubkey, string data);
+  //string decrypt(string privkey, string data);
+  string decrypt(string privkey, gcry_sexp_t &ciphertext);
 };
 
 #endif /* ENCRYPTION_H */

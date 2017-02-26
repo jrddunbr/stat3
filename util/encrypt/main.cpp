@@ -9,12 +9,10 @@ int main() {
   Encryption encrypt;
   KeyPair keypair;
   keypair = encrypt.create_key();
-  cout << "KeyPair pub: " << keypair.pub << " priv: " << keypair.priv << "\n";
-  //encrypt.write_key("public.key", keypair.pub);
-  //cout << encrypt.read_key("private.key") << "\n";
-  gcry_sexp_t test = encrypt.to_gcrypt(keypair.pub);
-  string test2 = encrypt.to_string(test);
-  //we want these to be the exact same string. This confirms that the keys are reloaded properly
-  cout << "pub-before: " << keypair.pub << " pub-afer: " << test2 << "\n";
-  cout << "compare " << keypair.pub.compare(test2) << "\n";
+  encrypt.write_key("public.key", keypair.pub);
+  cout << keypair.pub << "\n";
+  cout << encrypt.read_key("public.key") << "\n";
+  cout << encrypt.read_key("public.key").compare(keypair.pub) << "\n";
+  gcry_sexp_t out = encrypt.encrypt(keypair.pub, "hello");
+  cout << encrypt.decrypt(keypair.priv, out) << "\n";
 }
