@@ -8,8 +8,7 @@ int main() {
   Encryption encrypt;
   KeyPair keypair;
   keypair = encrypt.create_key();
-  cout << "kp: " << endl;
-cout << "KeyPair pub: " << keypair.pub << " priv: " << keypair.priv;
+  cout << "KeyPair pub: " << keypair.pub << " priv: " << keypair.priv << "\n";
   //encrypt.write_key("public.key", keypair.pub);
   //cout << encrypt.read_key("private.key") << "\n";
 }

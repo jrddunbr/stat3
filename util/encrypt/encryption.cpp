@@ -30,6 +30,7 @@ KeyPair Encryption::create_key() {
   gcry_sexp_t prams, keypair;
   gcry_sexp_build(&prams, NULL, "(genkey (rsa (nbits 4:2048)))");
   gcry_pk_genkey(&keypair, prams);
+  cout << gcry_sexp_sprint(keypair, GCRYSEXP_FMT_CANON, NULL, 0) << "\n";
   gcry_sexp_t pubk = gcry_sexp_find_token(keypair, "public-key", 0);
   gcry_sexp_t privk = gcry_sexp_find_token(keypair, "private-key", 0);
 
@@ -37,11 +38,6 @@ KeyPair Encryption::create_key() {
 	  cout << "Failed to generate key!\n";
 	  exit(1);
   }
-
-  cout << "raw: "<< keypair << "\n";
-  //cout << "both: " << to_string(keypair) << "\n";
-  cout << "priv: " << to_string(privk) << "\n";
-  cout << "pub: " << to_string(pubk) << "\n";
 
   KeyPair key;
   key.pub = to_string(pubk);
@@ -86,9 +82,9 @@ gcry_sexp_t Encryption::to_gcrypt(string key) {
 }
 
 string Encryption::to_string(gcry_sexp_t key) {
-  size_t sz = gcry_sexp_sprint(key, GCRYSEXP_FMT_CANON, NULL, 0);
+  size_t sz = gcry_sexp_sprint(key, GCRYSEXP_FMT_ADVANCED, NULL, 0);
   char *buffer = (char *) malloc(sz);
-  gcry_sexp_sprint(key, GCRYSEXP_FMT_CANON, buffer, sz);
-  string str(buffer);
+  gcry_sexp_sprint(key, GCRYSEXP_FMT_ADVANCED, buffer, sz);
+  string str = buffer;
   return str;
 }

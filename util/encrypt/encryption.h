@@ -16,7 +16,6 @@ struct KeyPair {
 
 class Encryption {
 private:
-  gcry_sexp_t keypair, pubkey, privkey;
   size_t get_keypair_size(int nbits);
   size_t keysize;
   gcry_sexp_t to_gcrypt(string key);
