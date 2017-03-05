@@ -60,28 +60,48 @@ for i in range(1,4):
     out_table.append(sw_table)
     print()
 
-
-for i in range(1,4):
-    sw_table = []
-    print ("For switch SWM{}:".format(i))
-    for j in range(1,25):
-        before = in_table[i-1][j-1]
-        after = out_table[i-1][j-1]
-        data = {}
-        data["in"] = calcSpeed(before["in"], after["in"], before["speed"], DELAY+(second-first))
-        data["out"] = calcSpeed(before["out"], after["out"], before["speed"], DELAY+(second-first))
-        data["speed"] = before["speed"]
-        title = "No Link"
-        if(before["speed"] == 1000000000):
-            title = "Gigabit"
-        elif(before["speed"] == 100000000):
-            title = "100mb/s"
-        elif(before["speed"] == 10000000):
-            title = "10mb/s"
-        elif(before["speed"] == 0):
+if True:
+    for i in range(1,4):
+        sw_table = []
+        print ("For switch SWM{}:".format(i))
+        for j in range(1,25):
+            before = in_table[i-1][j-1]
+            after = out_table[i-1][j-1]
+            data = {}
+            data["in"] = calcSpeed(before["in"], after["in"], before["speed"], DELAY+(second-first))
+            data["out"] = calcSpeed(before["out"], after["out"], before["speed"], DELAY+(second-first))
+            data["speed"] = before["speed"]
             title = "No Link"
-        else:
-            title = "{}b/s".format(before["speed"])
-        print("Port {}: Ingress: {}% Egress: {}% Link Speed: {}".format(j, int(data["in"]), int(data["out"]), title))
-        sw_table.append(data)
-    calcd_table.append(sw_table)
+            if(before["speed"] == 1000000000):
+                title = "Gigabit"
+            elif(before["speed"] == 100000000):
+                title = "100mb/s"
+            elif(before["speed"] == 10000000):
+                title = "10mb/s"
+            elif(before["speed"] == 0):
+                title = "No Link"
+            else:
+                title = "ACK"
+            print("Port {}: Ingress: {}% Egress: {}% Link Speed: {}".format(j, int(data["in"]), int(data["out"]), title))
+            sw_table.append(data)
+        calcd_table.append(sw_table)
+
+if True: # Port Usage/Speed Table
+    for i in range(1,4):
+        sw_table = []
+        print ("SWM{}: ".format(i), end="", flush=True)
+        for j in range(1,25):
+            speed = in_table[i-1][j-1]["speed"]
+            title = "  "
+            if(speed == 1000000000):
+                title = "■ "
+            elif(speed == 100000000):
+                title = "◨ "
+            elif(speed == 10000000):
+                title = "◫ "
+            elif(speed == 0):
+                title = "□ "
+            else:
+                title = "▩ "
+            print (title, end="", flush=True)
+        print()
