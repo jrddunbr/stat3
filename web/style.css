@@ -1,0 +1,52 @@
+html {
+    background: #1a1a1f;
+    color: white;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+h1, h2 {
+    font-variant: small-caps;
+}
+
+.header {
+    text-align: center;
+}
+
+a, a.visited {
+    color: #afafff;
+    text-decoration: none;
+}
+
+.content {
+    margin-left: 5%;
+}
+
+ul {
+    list-style: none;
+}
+
+.progress-bar {
+  background-color:#2e2e38;
+  display:inline-block;
+}
+.progress-bar-blue {
+  background-color:#518BC1;
+  display:inline-block;
+}
+.progress-bar-data {
+  background-color:#8cc152;
+  display: inline-block;
+}
+.progress-bar-data-dark {
+  background-color:#2e2e38;
+  display: inline-block;
+}
+
+.online {
+  background-color:#8cc152;
+  color:black
+}
+
+.offline {
+  background-color:#da4453;
+}

@@ -1,0 +1,47 @@
+{
+  "data": {
+    "servers": [
+      {
+        "name": "localhost",
+        "cpu": "3.5%",
+        "memused": 23,
+        "memtotal": 46,
+        "diskused": 21,
+        "disktotal": 23
+      },
+      {
+        "name": "other_server"
+      },
+      {
+        "name": "sandwich",
+        "cpu": "50.0%",
+        "memused": 12,
+        "memtotal": 15
+      },
+      {
+        "name": "potato",
+        "cpu": "73.4%",
+        "memused": 12
+      }
+    ],
+    "batteries": [
+      {
+        "name": "test",
+        "percent": "24.5%",
+        "timeleft": "13 minutes"
+      },
+      {
+        "name": "test2",
+        "percent": "53.0%",
+        "timeleft": "49 minutes"
+      }
+    ],
+    "sensors": [
+      {
+        "name": "test_sensor",
+        "type": "THERMAL",
+        "value": 298
+      }
+    ]
+  }
+}

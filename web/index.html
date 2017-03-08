@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+    Management
+  </title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript">
+
+// magic number to convert bytes to MiB by multiplying
+B_MIB = 9.5367431640625e-07;
+// magic number to convert bytes to GiB by multiplying
+B_GIB = 9.313225746154785e-10;
+
+//live text
+LIVE = "<td><span class=\"online\">&nbspONLINE&nbsp&nbsp</span></td>";
+
+//dead text
+DEAD = "<td><span class=\"offline\">&nbspOFFLINE&nbsp</span></td>";
+
+//////////////
+//
+// Configuration Constants
+//
+//////////////
+
+//show disk on main page
+show_disk = true;
+
+//////////////
+
+function update() {
+  request = new XMLHttpRequest();
+  request.onreadystatechange = function() {
+    getData(request);
+  };
+  request.open("GET", ("/stat/manage.json?" + new Date().getTime()), true);
+  request.send();
+
+}
+
+function update_net() {
+  net_req = new XMLHttpRequest();
+  net_req.onreadystatechange = function() {
+    getNet(net_req);
+  };
+  net_req.open("GET", ("/stat/net.json?" + new Date().getTime()), true);
+  net_req.send();
+}
+
+function getData(request) {
+  if(request.readyState == 4) {
+    if(request.status != 200) {
+      if(request.statusText.length > 0) {
+        console.log("Bad!" + request.statusText);
+      }else{
+        console.log("Bad request?");
+      }
+      return;
+    }
+    if(typeof(request.response) == 'string') {
+      response = JSON.parse(request.responseText);
+      if(response.data.servers != null) {
+        //console.log("I see servers!");
+        handleServers(response.data.servers);
+      }else{
+        //console.log("I don't see servers.");
+      }
+      if(response.data.batteries != null) {
+        console.log("I see batteries!");
+        handleBatteries(response.data.batteries);
+      }else{
+        //console.log("I don't see batteries.");
+      }
+      if(response.data.sensors != null) {
+        //console.log("I see sensors!");
+        handleSensors(response.data.sensors);
+      }else{
+        //console.log("I don't see sensors.");
+      }
+    }
+  }
+}
+
+function getNet(request) {
+  if(request.readyState == 4) {
+    if(request.status != 200) {
+      if(request.statusText.length > 0) {
+        console.log("Bad!" + request.statusText);
+      }else{
+        console.log("Bad request?");
+      }
+      return;
+    }
+    if(typeof(request.response) == 'string') {
+      response = JSON.parse(request.responseText);
+      if(response.data.network != null) {
+        //console.log("I see network!");
+        handleNetwork(response.data.network);
+      }else{
+        //console.log("I don't see network.");
+      }
+    }
+  }
+}
+
+
+function handleServers(response) {
+  text = "<tr><td>name&nbsp&nbsp</td><td></td><td>cpu&nbsp&nbsp</td><td>ram&nbsp&nbsp</td>";
+  if(show_disk) {
+    text += "<td>disk&nbsp&nbsp</td>";
+  }
+  text += "</tr>";
+  for(i = 0; i < response.length; i++) {
+    server = response[i];
+    text += "<tr><td>" + server["name"] + "&nbsp&nbsp</td>"
+    if (server["cpu"] != null) {
+      text += LIVE;
+      text += "<td><span class=\"progress-bar\" style=\"width: 100px\"><span class=\"progress-bar-data\" style=\"width: " + server["cpu"] +"\"><span>&nbsp</span></span></span></td>"
+      if((server["memused"] != null) && (server["memtotal"] != null)) {
+        text +="<td><span class=\"progress-bar\" style=\"width: 100px\"><span class=\"progress-bar-data\" style=\"width: " + 100*(server["memused"] / server["memtotal"]) +"%\"><span>&nbsp</span></span></span></td>";
+      }else{
+        text += "<td></td>";
+      }
+      if((server["diskused"] != null) && (server["disktotal"] != null) && show_disk) {
+        text += "<td><span class=\"progress-bar\" style=\"width: 100px\"><span class=\"progress-bar-data\" style=\"width: " + 100*(server["diskused"] / server["disktotal"]) +"%\"><span>&nbsp</span></span></span></td>";
+      }else{
+        text += "<td></td>";
+      }
+      text += "</tr>";
+    }else{
+      text += DEAD;
+      text += "</tr>";
+    }
+  }
+  document.getElementById("servers").innerHTML = text;
+}
+
+function handleBatteries(response) {
+  text = "<tr><td>name&nbsp&nbsp</td><td>percent&nbsp&nbsp</td><td>time left</td></tr>";
+  for(i = 0; i < response.length; i++) {
+    battery = response[i];
+    text += "<tr><td>" + battery["name"] + "&nbsp&nbsp</td>";
+    if(battery["percent"] != null) {
+      text += "<td><span class=\"progress-bar\" style=\"width: 100px\"><span class=\"progress-bar-data\" style=\"width: " + battery["percent"] +"\"><span>&nbsp</span></span></span></td>"
+    }else{
+      text += "<td></td>";
+    }
+    if(battery["timeleft"] != null) {
+      text += "<td>" + battery["timeleft"] + "&nbsp&nbsp</td>";
+    }else{
+      text += "<td></td>";
+    }
+    text += "</tr>";
+  }
+  document.getElementById("batteries").innerHTML = text;
+}
+
+function handleSensors(response) {
+  text = "<tr><td>name&nbsp&nbsp</td></tr>";
+  for(i = 0; i < response.length; i++) {
+    sensor = response[i];
+    if(sensor["type"] == "THERMAL") {
+      deg_c = Math.round(sensor["value"] - 273.15);
+      deg_f = Math.round(sensor["value"] - 273.15)* 1.8000 + 32.00;
+      text += "<tr><td>" + sensor["name"] + ":&nbsp</td><td>" + deg_f + "°F&nbsp</td><td>(or " + deg_c + "°C)&nbsp</td></tr>";
+    }else if(sensor["type"] == "BOOLEAN") {
+      text += "<tr><td>" + sensor["name"] + ":&nbsp</td><td>" + sensor["value"] + "</td></tr>";
+    }else{
+      text += "<tr><td>" + sensor["name"] + ":&nbsp</td><td>" + sensor["value"] + "</td></tr>";
+    }
+  }
+  document.getElementById("sensors").innerHTML = text;
+}
+
+function handleNetwork(response) {
+  text = "<tr><td>link name&nbsp&nbsp</td><td>up|down&nbsp&nbsp</td>";
+  for(i = 0; i < response.length; i++) {
+    interface = response[i];
+    text += "<tr><td>" + interface["name"] + "</td>";
+    text += "<td><span class=\"progress-bar-blue\" style=\"width: 50px\"><span class=\"progress-bar-data-dark\" style=\"width: " + (100 - interface["upload"]) +"%\"><span>&nbsp</span></span></span>"
+    text += "<span class=\"progress-bar\" style=\"width: 50px\"><span class=\"progress-bar-data\" style=\"width: " + interface["download"] +"%\"><span>&nbsp</span></span></span></td>"
+    text += "</tr>";
+  }
+  document.getElementById("network").innerHTML = text;
+}
+
+setInterval(update, 15000);
+setTimeout(update, 100);
+setInterval(update_net, 15000);
+setTimeout(update_net, 100);
+  </script>
+</head>
+<body>
+  <h1>Servers:</h1>
+  <table id="servers">
+    <tr><td>You need to enable JavaScript for this page</td></tr>
+  </table>
+  <h1>Batteries:</h1>
+  <table id="batteries">
+  </table>
+  <h1>Sensors:</h1>
+  <table id="sensors">
+  </table>
+  <h1>Network:</h1>
+  <table id="network">
+  </table>
+</body>
+</html>

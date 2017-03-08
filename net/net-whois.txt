@@ -1,0 +1,25 @@
+swm1_1|OIT Link|SC
+swm1_4|swm1 to Ziltoid
+swm1_5|ITL SW6
+swm1_7|ITL SW5
+swm1_10|Mirror
+swm2_1|swm2 to Ziltoid|SC
+swm2_3|swm2 to swm3
+swm2_4|Bacon
+swm2_6|Bennu
+swm2_10|The-Internet
+swm2_12|NAS
+swm2_14|Talos
+swm2_17|Red Dwarf
+swm2_19|Prometheus
+swm3_1|swm3 to Ziltoid|SC
+swm3_3|swm3 to swm2
+swm3_6|Elephant
+swm3_10|GitLab
+swm3_11|Hydra 1
+swm3_12|Hydra 2
+swm3_13|Tyche 1
+swm3_14|Tyche 2
+swm3_16|Androbattery
+swm3_21|Management
+swm3_22|Norm
