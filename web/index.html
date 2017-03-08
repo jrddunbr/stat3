@@ -175,10 +175,10 @@ function handleSensors(response) {
 }
 
 function handleNetwork(response) {
-  text = "<tr><td>link name&nbsp&nbsp</td><td>up|down&nbsp&nbsp</td>";
+  text = "<tr><td><b>link name</b>&nbsp&nbsp</td><td><span class=\"progress-bar-blue\" style=\"color:black\">up</span>&nbsp&nbsp&nbsp&nbsp<span class=\"progress-bar-data\" style=\"color:black\">down</span>&nbsp&nbsp</td>";
   for(i = 0; i < response.length; i++) {
     interface = response[i];
-    text += "<tr><td>" + interface["name"] + "</td>";
+    text += "<tr><td>" + interface["name"] + "&nbsp</td>";
     text += "<td><span class=\"progress-bar-blue\" style=\"width: 50px\"><span class=\"progress-bar-data-dark\" style=\"width: " + (100 - interface["upload"]) +"%\"><span>&nbsp</span></span></span>"
     text += "<span class=\"progress-bar\" style=\"width: 50px\"><span class=\"progress-bar-data\" style=\"width: " + interface["download"] +"%\"><span>&nbsp</span></span></span></td>"
     text += "</tr>";
