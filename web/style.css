@@ -27,18 +27,22 @@ ul {
 
 .progress-bar {
   background-color:#2e2e38;
+  color:white;
   display:inline-block;
 }
 .progress-bar-blue {
   background-color:#518BC1;
+  color:black;
   display:inline-block;
 }
 .progress-bar-data {
   background-color:#8cc152;
+  color:black;
   display: inline-block;
 }
 .progress-bar-data-dark {
   background-color:#2e2e38;
+  color:black;
   display: inline-block;
 }
 

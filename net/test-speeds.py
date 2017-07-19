@@ -6,12 +6,15 @@ DELAY = 2 # seconds
 def getData(ip, port): # returns speed, in, out
     errorIndication, errorStatus, errorIndex, varBinds = next(
         getCmd(SnmpEngine(),
-               CommunityData('cacti', mpModel=0),
-               UdpTransportTarget((ip, 161)),
-               ContextData(),
-               ObjectType(ObjectIdentity('IF-MIB', 'ifSpeed', port)),
-               ObjectType(ObjectIdentity('IF-MIB', 'ifInOctets', port)),
-               ObjectType(ObjectIdentity('IF-MIB', 'ifOutOctets', port)))
+                CommunityData('cacti'),
+                #CommunityData('cacti', mpModel=0),
+                UdpTransportTarget((ip, 161)),
+                ContextData(),
+                ObjectType(ObjectIdentity('IF-MIB', 'ifSpeed', port)),
+                ObjectType(ObjectIdentity('IF-MIB', 'ifHCInOctets', port)),
+                ObjectType(ObjectIdentity('IF-MIB', 'ifHCOutOctets', port)))
+                #ObjectType(ObjectIdentity('IF-MIB', 'ifInOctets', port)),
+                #ObjectType(ObjectIdentity('IF-MIB', 'ifOutOctets', port)))
         )
     if errorIndication:
         print(errorIndication)

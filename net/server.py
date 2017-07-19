@@ -1,6 +1,6 @@
-from pysnmp.hlapi import *
 from time import sleep, clock
 import simplejson as json
+from easysnmp import snmp_get
 
 DELAY = 2 # seconds
 
@@ -15,33 +15,24 @@ class Port:
     def __init__(self, centric=False):
         self.centric = centric
 
+ifSpeed32 = "1.3.6.1.2.1.2.2.1.5"
+inOctets32 = "1.3.6.1.2.1.2.2.1.10"
+outOctets32 = "1.3.6.1.2.1.2.2.1.16"
+ifSpeed64 = "1.3.6.1.2.1.31.1.1.1.15"
+inOctets64 = "1.3.6.1.2.1.31.1.1.1.6"
+outOctets64 = "1.3.6.1.2.1.31.1.1.1.10"
+
 def getData(ip, port): # returns speed, in, out
-    errorIndication, errorStatus, errorIndex, varBinds = next(
-        getCmd(SnmpEngine(),
-               CommunityData('cacti', mpModel=0),
-               UdpTransportTarget((ip, 161)),
-               ContextData(),
-               ObjectType(ObjectIdentity('IF-MIB', 'ifSpeed', port)),
-               ObjectType(ObjectIdentity('IF-MIB', 'ifInOctets', port)),
-               ObjectType(ObjectIdentity('IF-MIB', 'ifOutOctets', port)))
-        )
-    if errorIndication:
-        print(errorIndication)
-    elif errorStatus:
-        print('%s at %s' % (errorStatus.prettyPrint(),
-                            errorIndex and varBinds[int(errorIndex) - 1][0] or '?'))
-    else:
-        pass
     data = {}
-    data["speed"] = int(varBinds[0][1])
-    data["in"] = int(varBinds[1][1])
-    data["out"] = int(varBinds[2][1])
+    data["speed"] = int(snmp_get(ifSpeed64 + "." + str(port), hostname=ip, community='cacti', version=2).value)
+    data["in"] = int(snmp_get(inOctets64 + "." + str(port), hostname=ip, community='cacti', version=2).value)
+    data["out"] = int(snmp_get(outOctets64 + "." + str(port), hostname=ip, community='cacti', version=2).value)
     return data
 
 def calcSpeed(first, second, speed, delay):
     ret = 0
     try:
-        ret = ((int(second) - int(first)) * 8 * 100) / (delay * speed)
+        ret = ((int(second) - int(first)) * 8 * 100) / (delay * speed * 1000000)
     except ZeroDivisionError:
         ret = 0
     return ret
@@ -56,25 +47,25 @@ def fetch_data(switches): # dict of switches (as class Switch) as arguemt
 
     first = clock();
     for s in switches:
-        #print(switches[s].name, end="", flush=True)
+        print(switches[s].name, end="", flush=True)
         sw_table = []
         for j in range(1,switches[s].ports+1):
-            #print(".", end="", flush=True)
+            print(".", end="", flush=True)
             sw_table.append(getData(switches[s].ip, j))
         in_table.append(sw_table)
-        #print()
+        print()
     second = clock();
 
     sleep(DELAY)
 
     for s in switches:
-        #print(switches[s].name, end="", flush=True)
+        print(switches[s].name, end="", flush=True)
         sw_table = []
         for j in range(1,switches[s].ports+1):
-            #print(".", end="", flush=True)
+            print(".", end="", flush=True)
             sw_table.append(getData(switches[s].ip, j))
         out_table.append(sw_table)
-        #print()
+        print()
 
     if True:
         i = 0
