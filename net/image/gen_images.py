@@ -7,60 +7,79 @@ import threading
 import datetime
 import os
 
+from os import listdir
+from os.path import isfile, join
 
+from multiprocessing import Process
 
-x = []
-y1 = []
-y2 = []
+def graph(datapath, imagepath, title):
 
+    x = []
+    y1 = []
+    y2 = []
 
-# import random
-# for i in range(0,20):
-#     x.append(i)
-#     y1.append(random.randint(0,100))
-#     y2.append(random.randint(-100,0))
+    data = open(datapath)
 
+    biggest = 0
 
-data = open("/home/jared/7-23-2017:128.153.145.251-1")
+    for line in data:
+        try:
+            field = line.split("-")
 
-biggest = 0
+            time = field[0].split(":")
+            timef = int(time[0]) + int(time[1])/60.0 + int(time[2])/60.0/60.0
+            x.append(timef)
 
-for line in data:
-    try:
-        field = line.split("-")
+            upload = float(field[1])
+            y2.append(0 - upload)
 
-        time = field[0].split(":")
-        timef = int(time[0]) + int(time[1])/60 + int(time[2])/360
-        #timef = datetime.datetime(year=2017,month=7,day=23,hour=int(time[0]),minute=int(time[1]))
-        x.append(timef)
+            download = float(field[2])
+            y1.append(download)
 
-        upload = float(field[1])
-        y2.append(0 - upload)
+            speed = int(field[3])
+            if speed > biggest:
+                biggest = speed
 
-        download = float(field[2])
-        y1.append(download)
+        except Exception as e:
+            print(e)
 
-        speed = int(field[3])
-        if speed > biggest:
-            biggest = speed
+    if biggest > 0:
+        plt.plot(x, y1, "black", x, y2, "black")
+        fig, ax = plt.subplots()
+        ax.fill_between(x,y1, color='#aaaaff')
+        ax.fill_between(x,y2, color='#ffaaaa')
+        ax.axis([0,24, 0 - biggest, biggest])
+        ax.set_xlabel('Time (GMT)')
+        ax.set_ylabel('<- Upload  Speed (Mbit/s)  Download ->')
+        ax.set_title(title)
+        plt.xticks(range(0,24))
+        ax.grid(color='#666666', linestyle='dotted', linewidth=1)
+        fig.tight_layout()
+        fig.set_size_inches(22, 17)
 
-    except Exception as e:
-        print(e)
+        plt.savefig(imagepath, dpi=300)
 
+if __name__ == '__main__':
 
-plt.plot(x, y1, x, y2)
-fig, ax = plt.subplots()
-ax.fill_between(x,y1, color='#aaaaff')
-ax.fill_between(x,y2, color='#ffaaaa')
+    path = "/opt/stat/data/high/"
 
-ax.axis([0,24, 0 - biggest, biggest])
-ax.set_xlabel('Time')
-ax.set_ylabel('Speed (Mbit/s)')
-ax.set_title(r'SWM1 to sc334-a')
-plt.xticks(range(0,24))
-ax.grid(color='#666666', linestyle='dotted', linewidth=1)
+    image = "/opt/stat/data/image/high"
 
-# Tweak spacing to prevent clipping of ylabel
-fig.tight_layout()
-fig.set_size_inches(20, 20)
-plt.savefig('foo.png', dpi=300)
+    proc = []
+
+    directory = [f for f in listdir(path) if isfile(join(path, f))]
+    for datafile in directory:
+        datapath = path + datafile
+        imagepath = image + "/" + datafile + ".png"
+        p = Process(target=graph, args=(datapath,imagepath, "",))
+        p.start()
+        proc.append(p)
+
+    while 1:
+        allclosed = True
+        for process in proc:
+            if process.is_alive():
+                allclosed = False
+        if allclosed:
+            print("All processes closed successfully")
+            exit(0)
