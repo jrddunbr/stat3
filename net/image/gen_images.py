@@ -38,6 +38,7 @@ def graph(datapath, imagepath, title):
             download = float(field[2])
             y1.append(download)
 
+            print("float-done {}u {}d".format(upload, download))
             speed = int(field[3])
             if speed > biggest:
                 biggest = speed
