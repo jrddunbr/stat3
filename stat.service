@@ -1,0 +1,8 @@
+[Unit]
+Description=stat3 server
+
+[Service]
+ExecStart /opt/stat3/run.sh
+
+[Install]
+WantedBy=multi-user.target
