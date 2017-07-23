@@ -25,7 +25,7 @@ def getData(ip, port): # returns speed, in, out
 
 def snmpthread(ip, pt, reverse): # Switch IP, port, reversed?
     while 1:
-        time = 1 # seconds
+        time = 15 # seconds
         b = getData(ip, str(pt))
         sleep(time)
         e = getData(ip, str(pt))
@@ -45,7 +45,6 @@ def snmpthread(ip, pt, reverse): # Switch IP, port, reversed?
                 datafile.write("{}:{}:{}-{}-{}-{}\n".format(now.hour, now.minute, now.second, in2, out2, speed))
         except Exception as e:
             print("Error creating log files, {}".format(e))
-        sleep(15)
 #####
 
 # main program code
