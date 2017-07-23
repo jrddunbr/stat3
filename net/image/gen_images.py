@@ -41,7 +41,7 @@ def graph(datapath, imagepath, title):
                 biggest = speed
 
         except Exception as e:
-            print(e)
+            print("data processing\n{}".format(e))
 
     if biggest > 0:
         plt.plot(x, y1, "black", x, y2, "black")
