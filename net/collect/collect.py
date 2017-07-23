@@ -40,9 +40,9 @@ def snmpthread(ip, pt, reverse): # Switch IP, port, reversed?
         try:
             datafile = open("/opt/stat/data/high/{}-{}-{}:{}-{}".format(now.month, now.day, now.year, ip, pt), "a+")
             if reverse:
-                datafile.write("{0:02}:{1:02}:{2:02}-{3}-{4}-{5}\n".format(now.hour, now.minute, now.second, out2, in2, speed))
+                datafile.write("{0:02}:{1:02}:{2:02}-{3}-{4}-{5}\n".format(now.hour, now.minute, now.second, round(out2,6), round(in2,6), speed))
             else:
-                datafile.write("{0:02}:{1:02}:{2:02}-{3}-{4}-{5}\n".format(now.hour, now.minute, now.second, in2, out2, speed))
+                datafile.write("{0:02}:{1:02}:{2:02}-{3}-{4}-{5}\n".format(now.hour, now.minute, now.second, round(in2,6), round(out2,6), speed))
         except Exception as e:
             print("Error creating log files, {}".format(e))
 #####
