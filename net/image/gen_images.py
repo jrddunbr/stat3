@@ -30,9 +30,11 @@ def graph(datapath, imagepath, title):
             timef = int(time[0]) + int(time[1])/60.0 + int(time[2])/60.0/60.0
             x.append(timef)
 
+            print("float1")
             upload = float(field[1])
             y2.append(0 - upload)
 
+            print("float2")
             download = float(field[2])
             y1.append(download)
 
