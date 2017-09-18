@@ -27,7 +27,7 @@ def graph(datapath, imagepath, title):
 
     for line in data:
         try:
-            field = line.split("-")
+            field = line.split(",")
 
             time = field[0].split(":")
             timef = int(time[0]) + int(time[1])/60.0 + int(time[2])/60.0/60.0
@@ -68,22 +68,8 @@ if __name__ == '__main__':
 
     image = "/opt/stat/data/image/high"
 
-    proc = []
-
     directory = [f for f in listdir(path) if isfile(join(path, f))]
     for datafile in directory:
         datapath = path + datafile
         imagepath = image + "/" + datafile + ".png"
-        p = Process(target=graph, args=(datapath,imagepath, "",))
-        p.start()
-        proc.append(p)
-        sleep(0.2)
-
-    while 1:
-        allclosed = True
-        for process in proc:
-            if process.is_alive():
-                allclosed = False
-        if allclosed:
-            print("All processes closed successfully")
-            exit(0)
+        graph(datapath,imagepath,"name")
