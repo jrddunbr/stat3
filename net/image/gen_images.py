@@ -47,7 +47,7 @@ def graph(datapath, imagepath, title):
             print("data processing\n{}".format(e))
 
     if biggest > 0:
-        print ("Doing graph for " + title)
+        print ("Doing graph for " + title, end="")
         plt.plot(x, y1, "black", x, y2, "black")
         fig, ax = plt.subplots()
         ax.fill_between(x,y1, color='#aaaaff')
