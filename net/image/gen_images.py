@@ -73,8 +73,22 @@ if __name__ == '__main__':
 
     image = "/opt/stat/data/image/high"
 
+    proc = []
+
     directory = [f for f in listdir(path) if isfile(join(path, f))]
     for datafile in directory:
         datapath = path + datafile
         imagepath = image + "/" + datafile + ".png"
-        graph(datapath,imagepath,datafile)
+        p = Process(target=graph, args=(datapath,imagepath, datafile,))
+        p.start()
+        proc.append(p)
+        sleep(0.2)
+
+    while 1:
+        allclosed = True
+        for process in proc:
+            if process.is_alive():
+                allclosed = False
+        if allclosed:
+            print("All processes closed successfully")
+            exit(0)
