@@ -61,6 +61,7 @@ def graph(datapath, imagepath, title):
         fig.set_size_inches(22, 17)
 
         plt.savefig(imagepath, dpi=300)
+        plt.close()
 
 if __name__ == '__main__':
 
