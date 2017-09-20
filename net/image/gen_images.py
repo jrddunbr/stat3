@@ -47,6 +47,7 @@ def graph(datapath, imagepath, title):
             print("data processing\n{}".format(e))
 
     if biggest > 0:
+        print ("Doing graph for " + title)
         plt.plot(x, y1, "black", x, y2, "black")
         fig, ax = plt.subplots()
         ax.fill_between(x,y1, color='#aaaaff')
@@ -61,7 +62,10 @@ def graph(datapath, imagepath, title):
         fig.set_size_inches(22, 17)
 
         plt.savefig(imagepath, dpi=300)
+        print("Saved graph " + title)
         plt.close()
+    else:
+        print ("Ignoring graph for " + title)
 
 if __name__ == '__main__':
 
@@ -73,4 +77,4 @@ if __name__ == '__main__':
     for datafile in directory:
         datapath = path + datafile
         imagepath = image + "/" + datafile + ".png"
-        graph(datapath,imagepath,"name")
+        graph(datapath,imagepath,datafile)
