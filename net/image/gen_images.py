@@ -82,7 +82,7 @@ if __name__ == '__main__':
         p = Process(target=graph, args=(datapath,imagepath, datafile,))
         p.start()
         proc.append(p)
-        sleep(0.2)
+        sleep(0.1)
 
     while 1:
         allclosed = True
