@@ -12,7 +12,7 @@ import os
 
 from os import listdir
 from os.path import isfile, join
-from shutil import copyfile
+import shutil
 
 from multiprocessing import Process
 
@@ -62,19 +62,20 @@ def graph(datapath, imagepath, title):
     fig.tight_layout()
     fig.set_size_inches(22, 17)
 
+    tempimagepath = imagepath + ".tmp.png"
 
     print ("Creating plot: {}".format(imagepath))
     # Save in temp file to prevent waiting for file to be updated on front-facing page
     try:
-        plt.savefig(imagepath + ".tmp.png", dpi=300)
+        plt.savefig(tempimagepath, dpi=300)
     except Exception as e:
         print ("Cannot create image file... check perms {}".format(e))
     plt.close()
 
     # Do this so that we don't have to wait for the file to load while it's being updated.
     try:
-        shutil.copyfile(imagepath + ".tmp.png", imagepath)
-        os.remove(imagepath + ".tmp.png")
+        shutil.copyfile(tempimagepath, imagepath)
+        os.remove(tempimagepath)
     except Exception as e:
         print ("Error when copy/delete file: {}".format(e))
 
