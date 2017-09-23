@@ -18,8 +18,7 @@ swm3_6|Elephant
 swm3_10|GitLab
 swm3_11|Hydra 1
 swm3_12|Hydra 2
-swm3_13|Tyche 1
-swm3_14|Tyche 2
+swm3_13|Grand-Dad
 swm3_16|Androbattery
 swm3_21|Management
 swm3_22|Norm
