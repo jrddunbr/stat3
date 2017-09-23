@@ -47,6 +47,8 @@ def graph(datapath, imagepath, title):
         except Exception as e:
             print("data processing\n{}".format(e))
 
+    print("{} is going at {}Mb/s max".format(imagepath, biggest), end="")
+
     plt.plot(x, y1, "black", x, y2, "black")
     fig, ax = plt.subplots()
     ax.fill_between(x,y1, color='#aaaaff')
@@ -60,6 +62,8 @@ def graph(datapath, imagepath, title):
     fig.tight_layout()
     fig.set_size_inches(22, 17)
 
+
+    print ("Creating plot: {}".format(imagepath))
     # Save in temp file to prevent waiting for file to be updated on front-facing page
     try:
         plt.savefig(imagepath + ".tmp", dpi=300)
@@ -87,6 +91,7 @@ if __name__ == '__main__':
         datapath = path + datafile
         imagepath = image + "/" + datafile + ".png"
         p = Process(target=graph, args=(datapath, imagepath, datafile))
+        print("Starting {} process".format(datafile))
         p.start()
         proc.append(p)
         sleep(0.2)
@@ -97,5 +102,5 @@ if __name__ == '__main__':
             if process.is_alive():
                 allclosed = False
         if allclosed:
-            # print("All processes closed successfully")
+            print("All processes closed successfully")
             exit(0)
