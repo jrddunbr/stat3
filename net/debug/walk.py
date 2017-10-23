@@ -1,7 +1,7 @@
 from easysnmp import snmp_get, snmp_set, snmp_walk
 
 # Perform an SNMP walk
-system_items =  snmp_walk(u'.1.3.6.1.2.1', hostname='128.153.145.251', community='cacti', version=1)
+system_items =  snmp_walk(u'.1.3.6.1.2.1', hostname='128.153.145.20', community='cacti', version=1)
 
 
 
